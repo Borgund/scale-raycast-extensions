@@ -3,7 +3,7 @@
   "name": "health-check-monitor",
   "title": "Health Check Monitor",
   "description": "Monitor health status of configured endpoints",
-  "icon": "icon.svg",
+  "icon": "icon.png",
   "author": "Borgund",
   "owner": "scaleaq",
   "categories": [
