@@ -6,7 +6,7 @@
   "icon": "icon.png",
   "author": "Borgund",
   "owner": "scaleaq",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "categories": [
     "Developer Tools",
     "System"
@@ -15,7 +15,7 @@
   "commands": [
     {
       "name": "index",
-      "title": "Search SUI Tokens",
+      "title": "Search Sui Tokens",
       "subtitle": "--sui-",
       "description": "Search for tokens in the ScaleUI design system",
       "mode": "view"
@@ -24,7 +24,7 @@
   "dependencies": {
     "@raycast/api": "^1.89.1",
     "@raycast/utils": "^1.10.1",
-    "@scaleaq/scaleui-tokens": "^1.6.0",
+    "@scaleaq/scaleui-tokens": "^1.7.0",
     "@types/node-fetch": "^2.6.12",
     "@types/react": "^18.3.3",
     "node-fetch": "^2.7.0",
@@ -45,5 +45,15 @@
     "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
     "publish": "npx @raycast/api@latest publish"
   },
-  "preferences": []
+  "preferences": [
+    {
+      "name": "palette",
+      "label": "Show Palette",
+      "title": "Show palette",
+      "description": "Toggle if you want to show the palette tokens",
+      "type": "checkbox",
+      "default": false,
+      "required": false
+    }
+  ]
 }
