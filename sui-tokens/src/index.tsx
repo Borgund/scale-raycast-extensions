@@ -60,9 +60,11 @@ function TokenItem({ name, value }: { name: string; value: string }) {
           <Action.CopyToClipboard
             title="Copy Var()"
             shortcut={{ modifiers: ["shift"], key: "enter" }}
-            content={value}
+            content={`var(${name})`}
           />
-          <Action.Paste title="Insert Var()" shortcut={{ modifiers: ["cmd", "shift"], key: "enter" }} content={value} />
+          <Action.Paste title="Insert Var()" shortcut={{ modifiers: ["cmd", "shift"], key: "enter" }} content={`var(${name})`} />
+          <Action.CopyToClipboard title="Copy #hex" shortcut={{ modifiers: ["ctrl"], key: "enter" }} content={value} />
+          <Action.Paste title="Insert #hex" shortcut={{ modifiers: ["ctrl", "shift"], key: "enter" }} content={value} />
           <Action title="Open Extension Preferences" onAction={openExtensionPreferences} />
         </ActionPanel>
       }
