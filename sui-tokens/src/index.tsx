@@ -50,21 +50,24 @@ export default function Command() {
   }, [searchText]);
 
   return (
-    <List searchBarPlaceholder="Search SUI Tokens" filtering={false} onSearchTextChange={setSearchText} searchBarAccessory={<FilterDropdown onChange={(value) => setShowFilter(value)} />}>
+    <List
+      searchBarPlaceholder="Search SUI Tokens"
+      filtering={false}
+      onSearchTextChange={setSearchText}
+      searchBarAccessory={<FilterDropdown onChange={(value) => setShowFilter(value)} />}
+    >
       <List.EmptyView
         icon={{ source: Icon.ExclamationMark, tintColor: Color.Red }}
         title="No tokens found"
         description="Try searching for another token"
       />
       <List.Section title="Light Tokens">
-        {showFilter !== "dark" && lightTokensSearchList.map(({ name, value }) => (
-          <TokenItem key={name} name={name} value={value} />
-        ))}
+        {showFilter !== "dark" &&
+          lightTokensSearchList.map(({ name, value }) => <TokenItem key={name} name={name} value={value} />)}
       </List.Section>
       <List.Section title="Dark Tokens">
-        {showFilter !== "light" && darkTokensSearchList.map(({ name, value }) => (
-          <TokenItem key={name} name={name} value={value} />
-        ))}
+        {showFilter !== "light" &&
+          darkTokensSearchList.map(({ name, value }) => <TokenItem key={name} name={name} value={value} />)}
       </List.Section>
     </List>
   );
