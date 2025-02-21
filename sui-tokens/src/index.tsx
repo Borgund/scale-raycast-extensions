@@ -18,10 +18,14 @@ export default function Command() {
 
   useEffect(() => {
     searchDarkTokens(
-      flattenedDarkTokens.filter(({ name, value }) => name.includes(searchText) || value.includes(searchText)),
+      flattenedDarkTokens.filter(
+        ({ name, value }) => name.includes(searchText.toLowerCase()) || value.includes(searchText.toLowerCase()),
+      ),
     );
     searchLightTokens(
-      flattenedLightTokens.filter(({ name, value }) => name.includes(searchText) || value.includes(searchText)),
+      flattenedLightTokens.filter(
+        ({ name, value }) => name.includes(searchText.toLowerCase()) || value.includes(searchText.toLowerCase()),
+      ),
     );
   }, [searchText]);
 
