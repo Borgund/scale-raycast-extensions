@@ -4,6 +4,8 @@ import light_tokens from "@scaleaq/scaleui-tokens/light_tokens.js";
 // @ts-expect-error the library is not typed properly
 import dark_tokens from "@scaleaq/scaleui-tokens/dark_tokens.js";
 import { useEffect, useState } from "react";
+import Fuse from "fuse.js";
+
 
 export default function Command() {
   const [searchText, setSearchText] = useState("");
@@ -16,17 +18,33 @@ export default function Command() {
   const [darkTokensSearchList, searchDarkTokens] = useState(flattenedDarkTokens);
   const [lightTokensSearchList, searchLightTokens] = useState(flattenedLightTokens);
 
+  const options = {
+    includeScore: true,
+    includeMatches: true,
+    isCaseSensitive: false,
+    findAllMatches: true,
+    shouldSort: true,
+    ignoreLocation: true,
+    threshold: 0.2,
+    keys: ["name", "value", "searchString"],
+  }
+
+  const fuseLight = new Fuse(flattenedLightTokens, options);
+  const fuseDark = new Fuse(flattenedDarkTokens, options);
+
   useEffect(() => {
-    searchDarkTokens(
-      flattenedDarkTokens.filter(
-        ({ name, value }) => name.includes(searchText.toLowerCase()) || value.includes(searchText.toLowerCase()),
-      ),
-    );
-    searchLightTokens(
-      flattenedLightTokens.filter(
-        ({ name, value }) => name.includes(searchText.toLowerCase()) || value.includes(searchText.toLowerCase()),
-      ),
-    );
+    if (searchText.length > 0) {
+      const darkResults = fuseDark.search(searchText);
+      const darkItems = darkResults.map((result) => result.item);
+      searchDarkTokens(darkItems);
+
+      const lightResults = fuseLight.search(searchText);
+      const lightItems = lightResults.map((result) => result.item);
+      searchLightTokens(lightItems);
+    } else {
+      searchDarkTokens(flattenedDarkTokens);
+      searchLightTokens(flattenedLightTokens);
+    }
   }, [searchText]);
 
   return (
@@ -93,14 +111,15 @@ function flattenTokens(
   });
 }
 
-function flattenThemeTokens(obj: Record<string, unknown>, prefix = ""): { name: string; value: string }[] {
-  const result: { name: string; value: string }[] = [];
+function flattenThemeTokens(obj: Record<string, unknown>, prefix = ""): { name: string; value: string, searchString?: string }[] {
+  const result: { name: string; value: string, searchString?: string }[] = [];
   for (const key in obj) {
     const newKey = prefix ? `${prefix}.${key}` : key;
     if (typeof obj[key] === "object" && obj[key] !== null && !isStringValue(obj[key])) {
       result.push(...flattenTokens(obj[key] as Record<string, string>, newKey));
     } else {
-      result.push({ name: `--${newKey}`, value: String(obj[key]) });
+      result.push({ name: `--${newKey}`, value: String(obj[key]), searchString: newKey.split("-").join(" ") });
+      console.log(newKey.split("-").join(" "));
     }
   }
   return result;
