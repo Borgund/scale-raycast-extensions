@@ -6,7 +6,6 @@ import dark_tokens from "@scaleaq/scaleui-tokens/dark_tokens.js";
 import { useEffect, useState } from "react";
 import Fuse from "fuse.js";
 
-
 export default function Command() {
   const [searchText, setSearchText] = useState("");
 
@@ -27,7 +26,7 @@ export default function Command() {
     ignoreLocation: true,
     threshold: 0.2,
     keys: ["name", "value", "searchString"],
-  }
+  };
 
   const fuseLight = new Fuse(flattenedLightTokens, options);
   const fuseDark = new Fuse(flattenedDarkTokens, options);
@@ -111,8 +110,11 @@ function flattenTokens(
   });
 }
 
-function flattenThemeTokens(obj: Record<string, unknown>, prefix = ""): { name: string; value: string, searchString?: string }[] {
-  const result: { name: string; value: string, searchString?: string }[] = [];
+function flattenThemeTokens(
+  obj: Record<string, unknown>,
+  prefix = "",
+): { name: string; value: string; searchString?: string }[] {
+  const result: { name: string; value: string; searchString?: string }[] = [];
   for (const key in obj) {
     const newKey = prefix ? `${prefix}.${key}` : key;
     if (typeof obj[key] === "object" && obj[key] !== null && !isStringValue(obj[key])) {
