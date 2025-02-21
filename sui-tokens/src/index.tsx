@@ -13,12 +13,15 @@ export default function Command() {
   const [showFilter, setShowFilter] = useState<FilterType>("all");
 
   const showPalette = getPreferenceValues().palette;
+  const searchTreshold = getPreferenceValues().searchTreshold;
 
   const flattenedLightTokens = filterTokens(flattenThemeTokens(light_tokens), showPalette ? "" : "sui-palette");
   const flattenedDarkTokens = filterTokens(flattenThemeTokens(dark_tokens), showPalette ? "" : "sui-palette");
 
-  const [darkTokensSearchList, searchDarkTokens] = useState(flattenedDarkTokens);
-  const [lightTokensSearchList, searchLightTokens] = useState(flattenedLightTokens);
+  const [darkTokensSearchList, searchDarkTokens] =
+    useState<{ name: string; value: string; score?: number }[]>(flattenedDarkTokens);
+  const [lightTokensSearchList, searchLightTokens] =
+    useState<{ name: string; value: string; score?: number }[]>(flattenedLightTokens);
 
   const options = {
     includeScore: true,
@@ -27,7 +30,7 @@ export default function Command() {
     findAllMatches: true,
     shouldSort: true,
     ignoreLocation: true,
-    threshold: 0.2,
+    threshold: Number(searchTreshold) ?? 0.2,
     keys: ["name", "value", "searchString"],
   };
 
@@ -37,11 +40,15 @@ export default function Command() {
   useEffect(() => {
     if (searchText.length > 0) {
       const darkResults = fuseDark.search(searchText);
-      const darkItems = darkResults.map((result) => result.item);
+      const darkItems = darkResults.map((result) => {
+        return { ...result.item, score: result.score };
+      });
       searchDarkTokens(darkItems);
 
       const lightResults = fuseLight.search(searchText);
-      const lightItems = lightResults.map((result) => result.item);
+      const lightItems = lightResults.map((result) => {
+        return { ...result.item, score: result.score };
+      });
       searchLightTokens(lightItems);
     } else {
       searchDarkTokens(flattenedDarkTokens);
@@ -63,11 +70,15 @@ export default function Command() {
       />
       <List.Section title="Light Tokens">
         {showFilter !== "dark" &&
-          lightTokensSearchList.map(({ name, value }) => <TokenItem key={name} name={name} value={value} />)}
+          lightTokensSearchList.map(({ name, value, score }) => (
+            <TokenItem key={name} name={name} value={value} score={score} />
+          ))}
       </List.Section>
       <List.Section title="Dark Tokens">
         {showFilter !== "light" &&
-          darkTokensSearchList.map(({ name, value }) => <TokenItem key={name} name={name} value={value} />)}
+          darkTokensSearchList.map(({ name, value, score }) => (
+            <TokenItem key={name} name={name} value={value} score={score} />
+          ))}
       </List.Section>
     </List>
   );
@@ -92,13 +103,20 @@ function FilterDropdown(props: { onChange: (newValue: FilterType) => void }) {
   );
 }
 
-function TokenItem({ name, value }: { name: string; value: string }) {
+function TokenItem({ name, value, score }: { name: string; value: string; score?: number }) {
   return (
     <List.Item
       key={name}
       title={name}
       subtitle={value}
       icon={{ source: Icon.Swatch, tintColor: value }}
+      accessories={[
+        {
+          tag: { value: value.slice(1, 7), color: value },
+          icon: Icon.Hashtag,
+          tooltip: score ? `Search score: ${score}` : `Hex value`,
+        },
+      ]}
       actions={
         <ActionPanel>
           <Action.CopyToClipboard title="Copy Token Name" content={name} />
@@ -146,7 +164,6 @@ function flattenThemeTokens(
       result.push(...flattenTokens(obj[key] as Record<string, string>, newKey));
     } else {
       result.push({ name: `--${newKey}`, value: String(obj[key]), searchString: newKey.split("-").join(" ") });
-      console.log(newKey.split("-").join(" "));
     }
   }
   return result;
@@ -156,7 +173,10 @@ function isStringValue(value: unknown): value is string {
   return typeof value === "string" && value.startsWith("#");
 }
 
-function filterTokens(tokens: { name: string; value: string }[], exclude: string) {
+function filterTokens(
+  tokens: { name: string; value: string }[],
+  exclude: string,
+): { name: string; value: string; score?: number }[] {
   if (!exclude) return tokens;
   return tokens.filter((item) => !item.name.includes(exclude)).sort((a, b) => a.name.localeCompare(b.name));
 }

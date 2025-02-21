@@ -55,6 +55,61 @@
       "type": "checkbox",
       "default": false,
       "required": false
+    },
+    {
+      "name": "searchTreshold",
+      "label": "Search Treshold",
+      "title": "Search Treshold",
+      "description": "Set the search treshold",
+      "type": "dropdown",
+      "data": [
+        {
+          "value": "0.0",
+          "title": "0.0"
+        },
+        {
+          "value": "0.1",
+          "title": "0.1"
+        },
+        {
+          "value": "0.2",
+          "title": "0.2"
+        },
+        {
+          "value": "0.3",
+          "title": "0.3"
+        },
+        {
+          "value": "0.4",
+          "title": "0.4"
+        },
+        {
+          "value": "0.5",
+          "title": "0.5"
+        },
+        {
+          "value": "0.6",
+          "title": "0.6"
+        },
+        {
+          "value": "0.7",
+          "title": "0.7"
+        },
+        {
+          "value": "0.8",
+          "title": "0.8"
+        },
+        {
+          "value": "0.9",
+          "title": "0.9"
+        },
+        {
+          "value": "1.0",
+          "title": "1.0"
+        }
+      ],
+      "required": false,
+      "default": "0.2"
     }
   ]
 }
