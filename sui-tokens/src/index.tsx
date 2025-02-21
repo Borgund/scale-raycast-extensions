@@ -6,8 +6,11 @@ import dark_tokens from "@scaleaq/scaleui-tokens/dark_tokens.js";
 import { useEffect, useState } from "react";
 import Fuse from "fuse.js";
 
+type FilterType = "all" | "light" | "dark";
+
 export default function Command() {
   const [searchText, setSearchText] = useState("");
+  const [showFilter, setShowFilter] = useState<FilterType>("all");
 
   const showPalette = getPreferenceValues().palette;
 
@@ -47,23 +50,42 @@ export default function Command() {
   }, [searchText]);
 
   return (
-    <List searchBarPlaceholder="Search SUI Tokens" filtering={false} onSearchTextChange={setSearchText}>
+    <List searchBarPlaceholder="Search SUI Tokens" filtering={false} onSearchTextChange={setSearchText} searchBarAccessory={<FilterDropdown onChange={(value) => setShowFilter(value)} />}>
       <List.EmptyView
         icon={{ source: Icon.ExclamationMark, tintColor: Color.Red }}
         title="No tokens found"
         description="Try searching for another token"
       />
       <List.Section title="Light Tokens">
-        {lightTokensSearchList.map(({ name, value }) => (
+        {showFilter !== "dark" && lightTokensSearchList.map(({ name, value }) => (
           <TokenItem key={name} name={name} value={value} />
         ))}
       </List.Section>
       <List.Section title="Dark Tokens">
-        {darkTokensSearchList.map(({ name, value }) => (
+        {showFilter !== "light" && darkTokensSearchList.map(({ name, value }) => (
           <TokenItem key={name} name={name} value={value} />
         ))}
       </List.Section>
     </List>
+  );
+}
+
+function FilterDropdown(props: { onChange: (newValue: FilterType) => void }) {
+  const { onChange } = props;
+  return (
+    <List.Dropdown
+      tooltip="Select Filter options"
+      storeValue={true}
+      onChange={(newValue) => {
+        onChange(newValue as FilterType);
+      }}
+    >
+      <List.Dropdown.Section title="Filters">
+        <List.Dropdown.Item key="all" title="All" value="all" />
+        <List.Dropdown.Item key="light" title="Light" value="light" />
+        <List.Dropdown.Item key="dark" title="Dark" value="dark" />
+      </List.Dropdown.Section>
+    </List.Dropdown>
   );
 }
 
