@@ -1,0 +1,92 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "scaleaq-packages",
+  "version": "1.0.0",
+  "title": "ScaleAQ packages",
+  "description": "A way to search our private packages on github",
+  "icon": "extension-icon.png",
+  "author": "Borgund",
+  "owner": "scaleaq",
+  "categories": [
+    "Developer Tools",
+    "Documentation"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "search-scaleaq-packages",
+      "title": "Search ScaleAQ Packages",
+      "subtitle": "Search our private GitHub Packages",
+      "description": "Search our private GitHub Packages",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.94.0",
+    "@raycast/utils": "^1.17.0"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  },
+  "preferences": [
+    {
+      "title": "GitHub API Token",
+      "name": "githubToken",
+      "type": "password",
+      "required": true,
+      "label": "GitHub API Token",
+      "description": "Your GitHub API Token with read packages scope for ScaleAQ"
+    },
+    {
+      "title": "GitHub Organization",
+      "name": "githubOrg",
+      "type": "textfield",
+      "required": false,
+      "default": "ScaleAQ",
+      "label": "GitHub Organization",
+      "description": "Your GitHub Organization"
+    },
+    {
+      "title": "Sort options",
+      "name": "sortBy",
+      "type": "dropdown",
+      "required": false,
+      "label": "Sort options",
+      "description": "Sort options",
+      "default": "updated_at",
+      "data": [
+        { "title": "Updated at", "value": "updated_at" },
+        { "title": "Name", "value": "name" },
+        { "title": "Version count", "value": "version_count" }
+      ]
+    },
+    {
+      "title": "Preffered NPM package manager",
+      "name": "npmPackageManager",
+      "type": "dropdown",
+      "required": false,
+      "label": "Preffered NPM package manager",
+      "description": "Preffered NPM package manager",
+      "default": "pnpm",
+      "data": [
+        { "title": "npm", "value": "npm" },
+        { "title": "yarn", "value": "yarn" },
+        { "title": "pnpm", "value": "pnpm" },
+        { "title": "bun", "value": "bun" }
+      ]
+    }
+  ]
+}
